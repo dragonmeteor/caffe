@@ -88,6 +88,8 @@ int main(int argc, char** argv) {
       }
     }
     ++count;
+    if (count % 1000 == 0)
+      printf("Processed %d files.\n", count);
     if (count % 10000 == 0) {
       LOG(INFO) << "Processed " << count << " files.";
     }

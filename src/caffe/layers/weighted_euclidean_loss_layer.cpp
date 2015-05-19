@@ -11,10 +11,12 @@ template <typename Dtype>
 void WeightedEuclideanLossLayer<Dtype>::Reshape(
   const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   LossLayer<Dtype>::Reshape(bottom, top);
+  CHECK_EQ(bottom[0]->num(), bottom[2]->num())
+      << "The data and weight should have the same number.";
   CHECK_EQ(bottom[0]->count(1), bottom[1]->count(1))
       << "Inputs must have the same dimension.";
   CHECK_EQ(bottom[0]->count(1), bottom[2]->count(1))
-      << "Inputs must have the same dimension.";
+      << "Inputs must have the same dimension.";    
   diff_.ReshapeLike(*bottom[0]);
   weightedDiff_.ReshapeLike(*bottom[0]);
   diffSquared_.ReshapeLike(*bottom[0]);
@@ -34,7 +36,7 @@ void WeightedEuclideanLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& 
     bottom[2]->cpu_data(),
     diff_.cpu_data(),
     weightedDiff_.mutable_cpu_data());
-  Dtype dot = caffe_cpu_dot(count, weightedDiff_.cpu_data(), weightedDiff_.cpu_data());    
+  Dtype dot = caffe_cpu_dot(count, weightedDiff_.cpu_data(), diff_.cpu_data());    
   Dtype loss = dot / bottom[0]->num() / Dtype(2);
   top[0]->mutable_cpu_data()[0] = loss;
 }

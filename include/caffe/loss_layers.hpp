@@ -310,6 +310,8 @@ public:
   virtual void Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
 
+  virtual inline int ExactNumBottomBlobs() const { return 3; }
+
   virtual inline const char* type() const { return "WeightedEuclideanLoss"; }
   /**
    * Unlike most loss layers, in the EuclideanLossLayer we can backpropagate
